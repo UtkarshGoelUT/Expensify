@@ -2,7 +2,7 @@ import moment from 'moment';
 
 const filterReducerDefaultState = {
     text: '',
-    sortBy: 'amount',
+    sortBy: 'date',
     startDate: moment().startOf('month'),
     endDate: moment().endOf('month')
 };
