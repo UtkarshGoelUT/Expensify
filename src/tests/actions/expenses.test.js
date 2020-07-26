@@ -1,4 +1,5 @@
-import { addExpense, removeExpense, editExpense } from '../../actions/expenses';
+import { addExpense, removeExpense, editExpense, startAddExpense } from '../../actions/expenses';
+import expenses from '../fixtures/expenses';
 
 test("Testing removeExpense", () => {
     const action = removeExpense({ id: "323" });
@@ -11,24 +12,24 @@ test("Testing editExpense", () => {
 });
 
 test("addExpenes test with values", () => {
-    const action = addExpense({ description: "This is something", amount: 400, createdAt: 1000 });
+    const action = addExpense(expenses[2]);
     expect(action).toEqual({
         type: "ADD_EXPENSE",
-        expenses: { description: "This is something", amount: 400, createdAt: 1000, note: "", id: expect.any(String) }
+        expense: expenses[2]
     })
 });
 
-test("addExpenes test with values", () => {
-    const action = addExpense();
-    expect(action).toEqual({
-        type: "ADD_EXPENSE",
-        expenses: {
-            description: "",
-            note: "",
-            amount: 0,
-            createdAt: 0,
-            id: expect.any(String)
-        }
-    }
-    )
-});
+// test("addExpenes test with no values", () => {
+//     const action = startAddExpense();
+//     expect(action).toEqual({
+//         type: "ADD_EXPENSE",
+//         expense: {
+//             description: "",
+//             note: "",
+//             amount: 0,
+//             createdAt: 0,
+//             id: expect.any(String)
+//         }
+//     }
+//     )
+// });

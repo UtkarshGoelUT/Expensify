@@ -1,15 +1,26 @@
-import { v1 as uuid } from 'uuid';
+import database from '../firebase/firebase';
 
-const addExpense = ({ description = '', note = '', amount = 0, createdAt = 0 } = {}) => ({
-    type: 'ADD_EXPENSE',
-    expenses: {
-        id: uuid(), // This is for generating unique id's
-        description,
-        note,
-        amount,
-        createdAt
+const addExpense = (expense) => {
+    return {
+        type: 'ADD_EXPENSE',
+        expense
     }
-});
+};
+
+const startAddExpense = (expenseData = {}) => {
+    return (dispatch) => {
+        const { description = '', note = '', amount = 0, createdAt = 0 } = expenseData;
+        const expenses = {
+            description, note, amount, createdAt
+        }
+        database.ref('expenses').push(expenses).then((ref) => {
+            dispatch(addExpense({
+                id: ref.key,
+                ...expenses
+            }));
+        });
+    }
+}
 
 const removeExpense = ({ id } = {}) => (
     {
@@ -17,6 +28,15 @@ const removeExpense = ({ id } = {}) => (
         id
     }
 );
+
+export const startRemoveExpense = ({ id } = {}) => {
+    return (dispatch) => {
+        database.ref(`expenses/${id}`).remove()
+            .then(() => {
+                dispatch(removeExpense({ id }));
+            });
+    }
+}
 
 const editExpense = (id, updates) => (
     {
@@ -26,4 +46,25 @@ const editExpense = (id, updates) => (
     }
 );
 
-export { addExpense, removeExpense, editExpense };
+export const setExpense = (expenses) => ({
+    type: "SET_EXPENSES",
+    expenses
+})
+
+export const startSetExpense = () => {
+    return (dispatch) => {
+        return database.ref('expenses').once('value')
+            .then((snapshot) => {
+                const expenses = [];
+                snapshot.forEach((childSnapshot) => {
+                    expenses.push({
+                        id: childSnapshot.key,
+                        ...childSnapshot.val()
+                    });
+                });
+                dispatch(setExpense(expenses));
+            });
+    };
+}
+
+export { addExpense, removeExpense, editExpense, startAddExpense };
