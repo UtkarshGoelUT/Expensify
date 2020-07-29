@@ -7,7 +7,18 @@ export const login = (uid) => ({
 
 export const startLogin = () => {
     return () => {
-        return firebase.auth().signInWithPopup(googleProvider);
+        return firebase.auth().signInWithPopup(googleProvider).then(function (result) {
+            // code which runs on success
+        }).catch(function (error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            console.log(errorCode);
+            alert(errorCode);
+
+            var errorMessage = error.message;
+            console.log(errorMessage);
+            alert(errorMessage);
+        });;
     }
 };
 
