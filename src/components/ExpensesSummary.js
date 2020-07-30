@@ -1,21 +1,23 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import getVisibleExpenses from '../selectors/expenses';
+import { Link } from 'react-router-dom';
 import expensesTotal from '../selectors/expenses-total';
 import numeral from 'numeral';
 
 export const ExpensesSummary = ({ expenses, filters }) => {
     const visible = getVisibleExpenses(expenses, filters);
-    if (visible.length > 1) {
-        return <div>
-            Viewing {visible.length} expenses : Totalling ₹{numeral(expensesTotal(visible) / 100).format('0,0.00')}
+    const d = visible.length > 1 ? "expenses" : "expense";
+    return <div className="page-header">
+        <div class="content-container">
+            <h1 className="page-header__title">
+                Viewing <span>{visible.length}</span> {d} : Totalling <span>₹{numeral(expensesTotal(visible) / 100).format('0,0.00')}</span>
+            </h1>
+            <div className="page-header__actions">
+                <Link className="button" to="/add">Add expense</Link>
+            </div>
         </div>
-    }
-    else {
-        return <div>
-            Viewing {visible.length} expense : Totalling ₹{numeral(expensesTotal(visible) / 100).format('0,0.00')}
-        </div>
-    }
+    </div>
 };
 
 const mapStateToProps = (state) => (
