@@ -4,16 +4,19 @@ import moment from 'moment';
 import numeral from 'numeral';
 
 const ExpenseItemList = (props) => (
-    <div>
-        <Link to={`/edit/${props.id}`}>
-            <h3>
+    <Link className="list-item" to={`/edit/${props.id}`}>
+        <div>
+            <h3 className="list-item__title">
                 {props.description}
             </h3>
-        </Link>
-        <p>
-            ₹{numeral(props.amount / 100).format('0,0.00')} - {moment(props.createdAt).format('MMMM Do, YYYY')}
-        </p>
-    </div>
+            <span className="list-item__subtitle">
+                ₹{numeral(props.amount / 100).format('0,0.00')}
+            </span>
+        </div>
+        <h3 className="list-item__data">
+            {moment(props.createdAt).format('MMMM Do, YYYY')}
+        </h3>
+    </Link>
 );
 
 export default ExpenseItemList;
